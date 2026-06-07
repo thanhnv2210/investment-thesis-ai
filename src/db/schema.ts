@@ -8,6 +8,7 @@ import {
   timestamp,
   unique,
 } from "drizzle-orm/pg-core"
+import { relations } from "drizzle-orm"
 
 export const thesisAi = pgSchema("thesis_ai")
 
@@ -21,6 +22,11 @@ export const thesisReviews = thesisAi.table("thesis_reviews", {
   createdAt:      timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 })
 
+export const thesisReviewsRelations = relations(thesisReviews, ({ many, one }) => ({
+  counterarguments: many(counterarguments),
+  decision: one(decisions, { fields: [thesisReviews.id], references: [decisions.reviewId] }),
+}))
+
 // Individual counterarguments extracted from Claude's critique
 export const counterarguments = thesisAi.table("counterarguments", {
   id:             serial("id").primaryKey(),
@@ -29,6 +35,10 @@ export const counterarguments = thesisAi.table("counterarguments", {
   classification: varchar("classification", { length: 20 }), // 'knew' | 'manageable' | 'changes_view' | null
   sortOrder:      smallint("sort_order").notNull().default(0),
 })
+
+export const counterargumentsRelations = relations(counterarguments, ({ one }) => ({
+  review: one(thesisReviews, { fields: [counterarguments.reviewId], references: [thesisReviews.id] }),
+}))
 
 // Final decision — one per review
 export const decisions = thesisAi.table("decisions", {
@@ -42,3 +52,7 @@ export const decisions = thesisAi.table("decisions", {
 }, (t) => [
   unique("decisions_review_id_unique").on(t.reviewId),
 ])
+
+export const decisionsRelations = relations(decisions, ({ one }) => ({
+  review: one(thesisReviews, { fields: [decisions.reviewId], references: [thesisReviews.id] }),
+}))

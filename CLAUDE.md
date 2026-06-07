@@ -22,7 +22,7 @@ user think more rigorously about decisions they have already chosen to investiga
 | Styling | TailwindCSS v4 + shadcn/ui (New York style, zinc base, amber accent) |
 | ORM | Drizzle ORM (`postgres` driver) |
 | Database | PostgreSQL — **Neon** (hosted, ap-southeast-1), database `neondb`, schema `thesis_ai` |
-| AI | Anthropic SDK (`anthropic` package) — Claude Sonnet 4.6, SSE streaming |
+| AI | Anthropic SDK (`@anthropic-ai/sdk` package) — Claude Sonnet 4.6, SSE streaming |
 | Validation | Zod |
 | Package manager | pnpm |
 | Port | 3017 |
@@ -171,7 +171,7 @@ points. The `COUNTERARGUMENTS_END` marker signals end of parseable content.
 - **`postgres` driver** (not `pg`)
 - **`pgSchema('thesis_ai')`** namespaces all tables
 - **Never edit `src/components/ui/`** — shadcn auto-generated components
-- **Anthropic SDK directly** — not Vercel AI SDK. Use `anthropic.messages.stream()` for
+- **Anthropic SDK directly** — not Vercel AI SDK. Import from `@anthropic-ai/sdk`. Use `client.messages.stream()` for
   SSE, handle with `ReadableStream` in Next.js route handler
 - **Dark theme only** — no light mode toggle needed for MVP
 
@@ -183,15 +183,15 @@ Track progress here. Update as each step is completed.
 |------|-------------|--------|
 | 1 | Init scaffold — package.json, configs, globals.css | ✅ Done |
 | 2 | DB schema — schema.ts + first migration | ✅ Done |
-| 3 | API: POST /api/review — Claude SSE stream + save | ⬜ Next |
-| 4 | UI: /new — thesis form + streaming critique display | ⬜ |
+| 3 | API: POST /api/review — Claude SSE stream + save | ✅ Done |
+| 4 | UI: /new — thesis form + streaming critique display | ⬜ Next |
 | 5 | UI: counterargument-card — classify buttons + PATCH endpoint | ⬜ |
 | 6 | API + UI: POST /api/decisions + decision-form | ⬜ |
 | 7 | UI: / journal-list — past decisions home page | ⬜ |
 | 8 | UI: /journal/[id] — decision detail view | ⬜ |
 | 9 | Polish — loading states, error handling, empty states | ⬜ |
 
-**Next session start:** Run first-time setup above, then begin Step 3 (API /api/review).
+**Next session start:** Run first-time setup above, then begin Step 4 (UI: /new page).
 
 ## Shadcn/UI Components to Install
 
