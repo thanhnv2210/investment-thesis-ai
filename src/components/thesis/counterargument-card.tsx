@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { cn } from "@/lib/utils"
+import { MarkdownContent } from "@/components/markdown-content"
 
 type Classification = "knew" | "manageable" | "changes_view"
 
@@ -54,10 +55,10 @@ export function CounterargumentCard({
         classification === "knew" && "border-border/60",
       )}
     >
-      <p className="text-sm text-foreground leading-relaxed">
-        <span className="text-muted-foreground font-mono text-xs mr-2">{index}.</span>
-        {body}
-      </p>
+      <div className="text-sm text-foreground leading-relaxed">
+        <span className="text-muted-foreground font-mono text-xs mr-2 float-left mt-0.5">{index}.</span>
+        <MarkdownContent className="overflow-hidden">{body}</MarkdownContent>
+      </div>
 
       <div className="flex flex-wrap gap-2">
         {CLASSIFY_OPTIONS.map((opt) => {

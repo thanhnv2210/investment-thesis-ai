@@ -8,6 +8,11 @@ const inputSchema = z.object({
   ticker: z.string().min(1).max(20),
   thesis: z.string().min(1),
   sourceMaterial: z.string().optional(),
+  // If provided, sent directly to Claude instead of the auto-built message (used for follow-ups)
+  message: z.string().optional(),
+  conversationHistory: z
+    .array(z.object({ role: z.enum(["user", "assistant"]), content: z.string() }))
+    .optional(),
 })
 
 const SYSTEM_PROMPT = `You are a sceptical investment analyst reviewing a retail investor's thesis.
@@ -35,9 +40,9 @@ export async function POST(req: Request): Promise<Response> {
     return new Response(JSON.stringify({ error: "Invalid input" }), { status: 400 })
   }
 
-  const { ticker, thesis, sourceMaterial } = parsed.data
+  const { ticker, thesis, sourceMaterial, message, conversationHistory } = parsed.data
 
-  const userMessage = [
+  const userMessage = message ?? [
     `Stock ticker: ${ticker}`,
     `\nInvestment thesis:\n${thesis}`,
     sourceMaterial ? `\nSource material:\n${sourceMaterial}` : "",
@@ -63,7 +68,10 @@ export async function POST(req: Request): Promise<Response> {
           model: "claude-sonnet-4-6",
           max_tokens: 2048,
           system: SYSTEM_PROMPT,
-          messages: [{ role: "user", content: userMessage }],
+          messages: [
+            ...(conversationHistory ?? []),
+            { role: "user", content: userMessage },
+          ],
         })
 
         for await (const event of anthropicStream) {

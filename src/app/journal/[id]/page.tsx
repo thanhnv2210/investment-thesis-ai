@@ -5,6 +5,7 @@ import { CounterargumentCard } from "@/components/thesis/counterargument-card"
 import { DecisionForm } from "@/components/journal/decision-form"
 import { Separator } from "@/components/ui/separator"
 import { Badge } from "@/components/ui/badge"
+import { MarkdownContent } from "@/components/markdown-content"
 
 const ACTION_LABELS: Record<string, string> = {
   invest: "Invest",
@@ -59,6 +60,19 @@ export default async function JournalDetailPage({
       </div>
 
       <Separator />
+
+      {/* Full AI critique */}
+      {review.critiqueRaw && (
+        <>
+          <div className="space-y-3">
+            <h2 className="text-sm font-semibold text-foreground">Full AI Critique</h2>
+            <div className="rounded-lg border border-border bg-card p-5 text-sm text-foreground leading-relaxed max-h-[60vh] overflow-y-auto">
+              <MarkdownContent>{review.critiqueRaw}</MarkdownContent>
+            </div>
+          </div>
+          <Separator />
+        </>
+      )}
 
       {/* Counterarguments */}
       <div className="space-y-4">
