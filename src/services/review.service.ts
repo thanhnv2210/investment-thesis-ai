@@ -38,6 +38,16 @@ export async function classifyCounterargument(
     .where(eq(counterarguments.id, id))
 }
 
+export async function listReviews() {
+  return db.query.thesisReviews.findMany({
+    orderBy: (r, { desc }) => [desc(r.createdAt)],
+    with: {
+      decision: true,
+      counterarguments: { columns: { id: true, classification: true } },
+    },
+  })
+}
+
 export async function getReviewWithCounterarguments(reviewId: number) {
   const review = await db.query.thesisReviews.findFirst({
     where: eq(thesisReviews.id, reviewId),
