@@ -35,7 +35,7 @@ export function CritiqueStream({ text, isStreaming, ticker }: CritiqueStreamProp
 
       <div
         className={cn(
-          "rounded-lg border border-border bg-card p-5 text-sm text-foreground leading-relaxed whitespace-pre-wrap font-mono min-h-40 max-h-[60vh] overflow-y-auto",
+          "rounded-lg border border-border bg-card p-5 text-sm text-foreground leading-relaxed whitespace-pre-wrap min-h-40 max-h-[60vh] overflow-y-auto",
           isStreaming && "border-primary/30",
         )}
       >

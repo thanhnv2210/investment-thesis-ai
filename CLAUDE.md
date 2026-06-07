@@ -189,9 +189,9 @@ Track progress here. Update as each step is completed.
 | 6 | API + UI: POST /api/decisions + decision-form | ✅ Done |
 | 7 | UI: / journal-list — past decisions home page | ✅ Done |
 | 8 | UI: /journal/[id] — decision detail view | ✅ Done |
-| 9 | Polish — loading states, error handling, empty states | ⬜ Next |
+| 9 | Polish — loading states, error handling, empty states | ✅ Done |
 
-**Next session start:** Run first-time setup above, then begin Step 9 (polish).
+**Next session start:** Run `pnpm install && pnpm dev`. All 9 steps complete — MVP is done.
 
 ## Shadcn/UI Components to Install
 
