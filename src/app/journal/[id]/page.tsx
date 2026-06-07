@@ -2,7 +2,23 @@ import { notFound } from "next/navigation"
 import Link from "next/link"
 import { getReviewWithCounterarguments } from "@/services/review.service"
 import { CounterargumentCard } from "@/components/thesis/counterargument-card"
+import { DecisionForm } from "@/components/journal/decision-form"
 import { Separator } from "@/components/ui/separator"
+import { Badge } from "@/components/ui/badge"
+
+const ACTION_LABELS: Record<string, string> = {
+  invest: "Invest",
+  pass: "Pass",
+  wait: "Wait",
+  reduce: "Reduce",
+}
+
+const ACTION_VARIANT: Record<string, "default" | "secondary" | "destructive" | "outline"> = {
+  invest: "default",
+  pass: "destructive",
+  wait: "secondary",
+  reduce: "outline",
+}
 
 export default async function JournalDetailPage({
   params,
@@ -16,6 +32,7 @@ export default async function JournalDetailPage({
   const review = await getReviewWithCounterarguments(reviewId)
   if (!review) notFound()
 
+  const decision = review.decision ?? null
   const classified = review.counterarguments.filter((c) => c.classification !== null).length
   const total = review.counterarguments.length
 
@@ -32,6 +49,11 @@ export default async function JournalDetailPage({
               day: "numeric",
             })}
           </span>
+          {decision && (
+            <Badge variant={ACTION_VARIANT[decision.action] ?? "secondary"}>
+              {ACTION_LABELS[decision.action] ?? decision.action}
+            </Badge>
+          )}
         </div>
         <p className="text-sm text-muted-foreground leading-relaxed">{review.thesis}</p>
       </div>
@@ -40,14 +62,12 @@ export default async function JournalDetailPage({
 
       {/* Counterarguments */}
       <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-foreground">
-            Counterarguments
-            <span className="ml-2 text-muted-foreground font-normal">
-              ({classified}/{total} classified)
-            </span>
-          </h2>
-        </div>
+        <h2 className="text-sm font-semibold text-foreground">
+          Counterarguments{" "}
+          <span className="text-muted-foreground font-normal">
+            ({classified}/{total} classified)
+          </span>
+        </h2>
 
         {total === 0 ? (
           <p className="text-sm text-muted-foreground">No counterarguments were parsed.</p>
@@ -60,7 +80,7 @@ export default async function JournalDetailPage({
                 index={i + 1}
                 body={c.body}
                 initialClassification={
-                  (c.classification as "knew" | "manageable" | "changes_view" | null)
+                  c.classification as "knew" | "manageable" | "changes_view" | null
                 }
               />
             ))}
@@ -68,14 +88,46 @@ export default async function JournalDetailPage({
         )}
       </div>
 
-      {/* Step 6 placeholder: decision form will go here */}
       <Separator />
-      <div className="text-sm text-muted-foreground">
-        Decision form coming in next step.{" "}
-        <Link href="/" className="text-primary underline-offset-4 hover:underline">
-          Back to journal
-        </Link>
+
+      {/* Decision section */}
+      <div className="space-y-4">
+        {decision ? (
+          <>
+            <h2 className="text-sm font-semibold text-foreground">Your Decision</h2>
+            <div className="rounded-lg border border-border bg-card p-5 space-y-3">
+              <div className="flex items-center gap-3">
+                <Badge variant={ACTION_VARIANT[decision.action] ?? "secondary"}>
+                  {ACTION_LABELS[decision.action] ?? decision.action}
+                </Badge>
+                {decision.positionSize && (
+                  <span className="text-xs text-muted-foreground">{decision.positionSize}</span>
+                )}
+              </div>
+              <p className="text-sm text-foreground leading-relaxed">{decision.rationale}</p>
+              {decision.outcomeNote && (
+                <div className="pt-3 border-t border-border">
+                  <p className="text-xs text-muted-foreground mb-1">Outcome note</p>
+                  <p className="text-sm text-foreground">{decision.outcomeNote}</p>
+                </div>
+              )}
+            </div>
+          </>
+        ) : (
+          <>
+            <h2 className="text-sm font-semibold text-foreground">Record Your Decision</h2>
+            <p className="text-sm text-muted-foreground">
+              Having reviewed the counterarguments, what are you going to do?
+            </p>
+            <DecisionForm reviewId={reviewId} />
+          </>
+        )}
       </div>
+
+      <Separator />
+      <Link href="/" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+        ← Back to journal
+      </Link>
     </div>
   )
 }

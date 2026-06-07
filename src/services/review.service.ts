@@ -41,7 +41,10 @@ export async function classifyCounterargument(
 export async function getReviewWithCounterarguments(reviewId: number) {
   const review = await db.query.thesisReviews.findFirst({
     where: eq(thesisReviews.id, reviewId),
-    with: { counterarguments: { orderBy: (c, { asc }) => [asc(c.sortOrder)] } },
+    with: {
+      counterarguments: { orderBy: (c, { asc }) => [asc(c.sortOrder)] },
+      decision: true,
+    },
   })
   return review ?? null
 }
