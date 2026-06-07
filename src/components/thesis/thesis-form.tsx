@@ -15,11 +15,12 @@ export interface ThesisFormData {
 interface ThesisFormProps {
   onSubmit: (data: ThesisFormData) => void
   isLoading?: boolean
+  initialValues?: { ticker?: string; thesis?: string }
 }
 
-export function ThesisForm({ onSubmit, isLoading = false }: ThesisFormProps) {
-  const [ticker, setTicker] = useState("")
-  const [thesis, setThesis] = useState("")
+export function ThesisForm({ onSubmit, isLoading = false, initialValues }: ThesisFormProps) {
+  const [ticker, setTicker] = useState(initialValues?.ticker ?? "")
+  const [thesis, setThesis] = useState(initialValues?.thesis ?? "")
   const [sourceMaterial, setSourceMaterial] = useState("")
 
   const handleSubmit = (e: React.FormEvent) => {

@@ -1,7 +1,7 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react"
-import { useRouter } from "next/navigation"
+import { useState, useRef, useEffect, Suspense } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 import { ThesisForm, type ThesisFormData } from "@/components/thesis/thesis-form"
 import { CritiqueStream } from "@/components/thesis/critique-stream"
 import { Button } from "@/components/ui/button"
@@ -27,7 +27,18 @@ type ApiPayload = {
 }
 
 export default function NewReviewPage() {
+  return (
+    <Suspense>
+      <NewReviewContent />
+    </Suspense>
+  )
+}
+
+function NewReviewContent() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const initialTicker = searchParams.get("ticker") ?? undefined
+  const initialThesis = searchParams.get("thesis") ?? undefined
   const [phase, setPhase] = useState<Phase>("idle")
   const [ticker, setTicker] = useState("")
   const [completedTurns, setCompletedTurns] = useState<CompletedTurn[]>([])
@@ -152,7 +163,10 @@ export default function NewReviewPage() {
 
       {/* Initial form — only shown before any submission */}
       {phase === "idle" && !hasConversation && (
-        <ThesisForm onSubmit={handleFirstSubmit} />
+        <ThesisForm
+          onSubmit={handleFirstSubmit}
+          initialValues={{ ticker: initialTicker, thesis: initialThesis }}
+        />
       )}
 
       {/* Conversation thread */}

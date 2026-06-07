@@ -6,6 +6,7 @@ import { DecisionForm } from "@/components/journal/decision-form"
 import { Separator } from "@/components/ui/separator"
 import { Badge } from "@/components/ui/badge"
 import { MarkdownContent } from "@/components/markdown-content"
+import { Button } from "@/components/ui/button"
 
 const ACTION_LABELS: Record<string, string> = {
   invest: "Invest",
@@ -139,9 +140,19 @@ export default async function JournalDetailPage({
       </div>
 
       <Separator />
-      <Link href="/" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-        ← Back to journal
-      </Link>
+
+      <div className="flex items-center justify-between">
+        <Link href="/" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+          ← Back to journal
+        </Link>
+        <Button asChild variant="outline" size="sm">
+          <Link
+            href={`/new?ticker=${encodeURIComponent(review.ticker)}&thesis=${encodeURIComponent(review.thesis)}`}
+          >
+            Re-evaluate →
+          </Link>
+        </Button>
+      </div>
     </div>
   )
 }
