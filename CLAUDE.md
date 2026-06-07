@@ -185,13 +185,13 @@ Track progress here. Update as each step is completed.
 | 2 | DB schema — schema.ts + first migration | ✅ Done |
 | 3 | API: POST /api/review — Claude SSE stream + save | ✅ Done |
 | 4 | UI: /new — thesis form + streaming critique display | ✅ Done |
-| 5 | UI: counterargument-card — classify buttons + PATCH endpoint | ⬜ Next |
-| 6 | API + UI: POST /api/decisions + decision-form | ⬜ |
+| 5 | UI: counterargument-card — classify buttons + PATCH endpoint | ✅ Done |
+| 6 | API + UI: POST /api/decisions + decision-form | ⬜ Next |
 | 7 | UI: / journal-list — past decisions home page | ⬜ |
 | 8 | UI: /journal/[id] — decision detail view | ⬜ |
 | 9 | Polish — loading states, error handling, empty states | ⬜ |
 
-**Next session start:** Run first-time setup above, then begin Step 5 (counterargument-card + PATCH endpoint).
+**Next session start:** Run first-time setup above, then begin Step 6 (decisions API + decision-form).
 
 ## Shadcn/UI Components to Install
 

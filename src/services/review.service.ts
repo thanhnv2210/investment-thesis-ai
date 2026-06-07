@@ -28,6 +28,16 @@ export async function saveCounterarguments(reviewId: number, bodies: string[]): 
   )
 }
 
+export async function classifyCounterargument(
+  id: number,
+  classification: "knew" | "manageable" | "changes_view",
+): Promise<void> {
+  await db
+    .update(counterarguments)
+    .set({ classification })
+    .where(eq(counterarguments.id, id))
+}
+
 export async function getReviewWithCounterarguments(reviewId: number) {
   const review = await db.query.thesisReviews.findFirst({
     where: eq(thesisReviews.id, reviewId),
